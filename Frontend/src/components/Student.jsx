@@ -174,8 +174,8 @@ function Student() {
       </div>
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
-          <div className="bg-white rounded-lg p-6 w-full md:w-1/2 lg:w-1/3">
-            <h2 className="text-2xl font-bold mb-4">{editMode ? 'Edit Data' : 'Add Data'}</h2>
+        <div className="bg-white rounded-lg p-6 w-full md:w-1/2 lg:w-1/3 overflow-y-auto max-h-96">
+          <h2 className="text-2xl font-bold mb-4">{editMode ? 'Edit Data' : 'Add Data'}</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="committeeName" className="block text-sm font-medium text-gray-700">Name of the Committee</label>
@@ -187,8 +187,80 @@ function Student() {
                   onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2 w-full"
                 />
+
               </div>
               {/* Add other input fields similarly */}
+              <div className="mb-4">
+  <label htmlFor="eventType" className="block text-sm font-medium text-gray-700">Event Type</label>
+  <input
+    type="text"
+    id="eventType"
+    name="eventType"
+    value={formData.eventType}
+    onChange={handleChange}
+    className="border border-gray-300 rounded-md p-2 w-full"
+  />
+</div>
+
+<div className="mb-4">
+  <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">Event Name</label>
+  <input
+    type="text"
+    id="eventName"
+    name="eventName"
+    value={formData.eventName}
+    onChange={handleChange}
+    className="border border-gray-300 rounded-md p-2 w-full"
+  />
+</div>
+
+<div className="mb-4">
+  <label htmlFor="convenorName" className="block text-sm font-medium text-gray-700">Convenor Name</label>
+  <input
+    type="text"
+    id="convenorName"
+    name="convenorName"
+    value={formData.convenorName}
+    onChange={handleChange}
+    className="border border-gray-300 rounded-md p-2 w-full"
+  />
+</div>
+
+<div className="mb-4">
+  <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700">Event Date</label>
+  <input
+    type="date"
+    id="eventDate"
+    name="eventDate"
+    value={formData.eventDate}
+    onChange={handleChange}
+    className="border border-gray-300 rounded-md p-2 w-full"
+  />
+</div>
+
+<div className="mb-4">
+  <label htmlFor="duration" className="block text-sm font-medium text-gray-700">Duration (in hours)</label>
+  <input
+    type="number"
+    id="duration"
+    name="duration"
+    value={formData.duration}
+    onChange={handleChange}
+    className="border border-gray-300 rounded-md p-2 w-full"
+  />
+</div>
+
+<div className="mb-4">
+  <label htmlFor="poaPdf" className="block text-sm font-medium text-gray-700">POA PDF</label>
+  <input
+    type="file"
+    id="poaPdf"
+    name="poaPdf"
+    onChange={handleChange}
+    className="border border-gray-300 rounded-md p-2 w-full"
+  />
+</div>
+
               <div className="mb-4">
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>
                 <select
