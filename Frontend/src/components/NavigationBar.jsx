@@ -35,10 +35,11 @@ export default function StickyNavbar() {
     }, []);
 
     useEffect(()=>{
-        if (user.role == "hod") {
-            navigate("/hod")
-        }
-        else if(user.role == "student"){
+        // if (user.role == "hod") {
+        //     navigate("/hod")
+        // }
+
+        if(user.role == "student"){
             navigate("/student")
         }
     }, [user])
