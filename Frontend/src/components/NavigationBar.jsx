@@ -38,8 +38,8 @@ export default function StickyNavbar() {
         if (user.role == "hod") {
             navigate("/hod")
         }
-        else{
-            navigate("/signin")
+        else if(user.role == "student"){
+            navigate("/student")
         }
     }, [user])
 
@@ -71,8 +71,24 @@ export default function StickyNavbar() {
                 as="li"
                 className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
             >
-                <Link to="/" className="flex items-center">
-                    Docs
+                <Link to="/hod" className="flex items-center">
+                    HOD Portal
+                </Link>
+            </Typography>
+            <Typography
+                as="li"
+                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+            >
+                <Link to="/principle" className="flex items-center">
+                    Principle Portal
+                </Link>
+            </Typography>
+            <Typography
+                as="li"
+                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+            >
+                <Link to="/facultyMentor" className="flex items-center">
+                Faculty Mentor Portal
                 </Link>
             </Typography>
         </ul>
@@ -83,11 +99,11 @@ export default function StickyNavbar() {
             <div className="flex items-center justify-between text-blue-gray-900">
                 <Link
                     to="/"
-                    className="mr-4 cursor-pointer text-xl font-extrabold text-black"
+                    className="mr-4 cursor-pointer text-xl font-extrabold text-black text-xl"
                 >
                     FrAngel Events
                 </Link>
-                    <div className="mr-4 hidden lg:block mr-auto text-xl">{navList}</div>
+                    <div className="mr-4 hidden lg:block mr-auto text-md">{navList}</div>
                 <div className="flex items-center gap-2">
                     <div className="flex flex-col text-black items-end">
                         <p>{user.email ? user.email : ""}</p>

@@ -5,11 +5,15 @@ import {
   Routes
 } from "react-router-dom";
 
-import './app.css'
+// import './app.css'
 
 // Components
 import StickyNavbar from './components/NavigationBar'
 import Signin from './components/Signin';
+import Rooms from './components/Rooms'
+import HodPage from "./components/Hodpage";
+import PrincipalPage from "./components/PrinciplePage";
+import Student from "./components/Student";
 
 
 export function App() {
@@ -19,7 +23,10 @@ export function App() {
       <StickyNavbar/>
       <Routes>
         <Route exact path='/signin' element={<Signin/>}/>
-        <Route exact path='/hod' element={<>Hello Hod</>}/>
+        <Route exact path='/hod' element={<HodPage/>}/>
+        <Route exact path='/principle' element={<PrincipalPage/>}/>
+        <Route exact path='/student' element={<Student/>}/>
+        <Route exact path='/roombooking' element={<Rooms/>}/>
       </Routes>
     </Router>
     </>
