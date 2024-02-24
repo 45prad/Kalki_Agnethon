@@ -35,11 +35,16 @@ export default function StickyNavbar() {
     }, []);
 
     useEffect(()=>{
-        // if (user.role == "hod") {
-        //     navigate("/hod")
-        // }
-
-        if(user.role == "student"){
+        if (user.role == "hod") {
+            navigate("/hod")
+        }
+        else if(user.role == "principle"){
+            navigate("/principle")
+        }
+        else if(user.role == "commitee"){
+            navigate("/commitee")
+        }
+        else if(user.role == "student"){
             navigate("/student")
         }
     }, [user])
@@ -67,31 +72,91 @@ export default function StickyNavbar() {
 
     const navList = (
         <ul className="mt-2 mb-4 flex flex-col gap-1 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center lg:gap-4">
+            {
+                user.role == "hod"
+                    ?
+                    <Typography
+                        as="li"
+                        className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                    >
+                        <Link to="/hod" className="flex items-center">
+                            HOD Portal
+                        </Link>
+                    </Typography>
+                    :
+                    user.role == "commitee"
+                        ?
+                        <>
+                            <Typography
+                                as="li"
+                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                            >
+                                <Link to="/commitee" className="flex items-center">
+                                    Commitee Portal
+                                </Link>
+                            </Typography>
+                            <Typography
+                                as="li"
+                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                            >
+                                <Link to="/registerations" className="flex items-center">
+                                    Registerations
+                                </Link>
+                            </Typography>
+                            <Typography
+                                as="li"
+                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                            >
+                                <Link to="/" className="flex items-center">
+                                    Feedback Analysis
+                                </Link>
+                            </Typography>
 
-            <Typography
-                as="li"
-                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
-            >
-                <Link to="/hod" className="flex items-center">
-                    HOD Portal
-                </Link>
-            </Typography>
-            <Typography
-                as="li"
-                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
-            >
-                <Link to="/principle" className="flex items-center">
-                    Principle Portal
-                </Link>
-            </Typography>
-            <Typography
-                as="li"
-                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
-            >
-                <Link to="/facultyMentor" className="flex items-center">
-                Faculty Mentor Portal
-                </Link>
-            </Typography>
+                        </>
+                        :
+                        user.role == "principle"
+                            ?
+                            <Typography
+                                as="li"
+                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                            >
+                                <Link to="/principle" className="flex items-center">
+                                    Principle Portal
+                                </Link>
+                            </Typography>
+                            :
+                            user.role == "facultyMentor"
+                                ?
+                                <Typography
+                                    as="li"
+                                    className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                                >
+                                    <Link to="/facultyMentor" className="flex items-center">
+                                        Faculty Mentor Portal
+                                    </Link>
+                                </Typography>
+                                :
+                                <>
+                                <Typography
+                                    as="li"
+                                    className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                                >
+                                    <Link to="/student" className="flex items-center">
+                                        Student Portal
+                                    </Link>
+                                </Typography>
+                                <Typography
+                                    as="li"
+                                    className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                                >
+                                    <Link to="/upcomingevents" className="flex items-center">
+                                        Upcoming Events
+                                    </Link>
+                                </Typography>
+                                
+                                </>
+
+            }
         </ul>
     );
 
@@ -104,7 +169,7 @@ export default function StickyNavbar() {
                 >
                     FrAngel Events
                 </Link>
-                    <div className="mr-4 hidden lg:block mr-auto text-md">{navList}</div>
+                <div className="mr-4 hidden lg:block mr-auto text-md">{navList}</div>
                 <div className="flex items-center gap-2">
                     <div className="flex flex-col text-black items-end">
                         <p>{user.email ? user.email : ""}</p>

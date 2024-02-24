@@ -113,6 +113,17 @@ function Student() {
     }
   };
 
+  function extractDateComponents(dateString) {
+    const date = new Date(dateString);
+  
+    const year = date.getFullYear();
+  
+    const month = date.getMonth() + 1; 
+  
+    const day = date.getDate();
+  
+    return `${day}-${month}-${year}`;
+  }
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-3xl font-bold mb-4">Add Events</h1>
@@ -146,10 +157,10 @@ function Student() {
                 <td className="border px-4 py-2">{item.eventType}</td>
                 <td className="border px-4 py-2">{item.eventName}</td>
                 <td className="border px-4 py-2">{item.convenorName}</td>
-                <td className="border px-4 py-2">{item.eventDate}</td>
+                <td className="border px-4 py-2">{extractDateComponents(item.eventDate)}</td>
                 <td className="border px-4 py-2">{item.duration}</td>
                 <td className="border px-4 py-2">
-                  <a href={`http://localhost:5000/uploads/${item.poaPdf}`} target="_blank" rel="noopener noreferrer">View PDF</a>
+                  <a href={`http://localhost:5000/uploads/${item.poaPdf}`} target="_blank" rel="noopener noreferrer" className='text-blue-800'>View PDF</a>
                 </td>
                 <td className="border px-4 py-2" style={{ color: getStatusColor(item.status) }}>{item.status}</td>
                 <td className="border px-4 py-2">

@@ -99,6 +99,7 @@ export default function Signin(props){
                             <option name="role" value="dean">Student Dean Affairs</option>
                             <option name="role" value="hod">H.O.D</option>
                             <option name="role" value="facultyMentor">Faculty Mentor</option>
+                            <option name="role" value="commitee">Commitee Member</option>
                             <option name="role" value="student">Student</option>
                         </select>
                         <Link className="underline text-right" to="/">Forget Password</Link>
