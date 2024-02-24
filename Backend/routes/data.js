@@ -59,16 +59,30 @@ router.put('/status/:id', async (req, res) => {
 });
 
 // Update data by ID
-router.put('/:id', async (req, res) => {
+router.put('/:id', upload.single('poaPdf'), async (req, res) => {
   try {
     const id = req.params.id;
-    const updatedData = req.body;
+    const { committeeName, eventType, eventName, convenorName, eventDate, duration, status } = req.body;
+    const poaPdf = req.file ? req.file.filename : null;
+
+    const updatedData = {
+      committeeName,
+      eventType,
+      eventName,
+      convenorName,
+      eventDate,
+      duration,
+      poaPdf,
+      status
+    };
+
     await DataModel.findByIdAndUpdate(id, updatedData);
     res.json({ message: 'Data updated successfully' });
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 });
+
 
 // Delete data by ID
 router.delete('/:id', async (req, res) => {
