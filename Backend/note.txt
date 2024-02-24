@@ -1,0 +1,2 @@
+MongoDB = L1YHQsq3eB7LVTmj;
+mongodb+srv://chinmayrmhatre:L1YHQsq3eB7LVTmj@frangelevent.83x8snj.mongodb.net/?retryWrites=true&w=majority&appName=FrAngelEvent
