@@ -16,7 +16,7 @@ import PrincipalPage from "./components/PrinciplePage";
 import Commitee from "./components/Student";
 import UpcomingEvents from "./components/UpcommingEvents";
 import SystemDashboard from "./components/SystemPage";
-
+import Analysis from "./components/Analysis";
 
 
 export function App() {
@@ -33,6 +33,7 @@ export function App() {
         <Route exact path='/upcomingevents' element={<UpcomingEvents/>}/>
         <Route exact path='/roombooking' element={<Rooms/>}/>
         <Route exact path='/System' element={<SystemDashboard/>}/>
+        <Route exact path='/principle/analysis' element={<Analysis/>}/>
       </Routes>
     </Router>
     </>

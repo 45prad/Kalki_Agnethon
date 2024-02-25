@@ -11,9 +11,9 @@ const feedbackSchema = new Schema({
         ref: 'User'
     },
     rating: Number,
-    likedMost: String,
-    improvements: String,
-    comments: String
+    likedMost: Number, 
+    improvements: Number, 
+    comments: String 
 });
 
 module.exports = mongoose.model('Feedback', feedbackSchema);

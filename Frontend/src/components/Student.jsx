@@ -95,7 +95,7 @@ function Student() {
     try {
       const formDataToSend = new FormData();
       formDataToSend.append('id', formData.id);
-      formDataToSend.append('committeeName', formData.committeeName);
+      formDataToSend.append('committeeName', user.department);
       formDataToSend.append('eventType', formData.eventType);
       formDataToSend.append('eventName', formData.eventName);
       formDataToSend.append('convenorName', formData.convenorName);

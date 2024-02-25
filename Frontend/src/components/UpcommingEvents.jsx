@@ -9,9 +9,10 @@ const UpcomingEvents = () => {
     const [filteredEvents, setFilteredEvents] = useState([]);
     const [showFeedbackModal, setShowFeedbackModal] = useState(false);
     const [rating, setRating] = useState(1);
-    const [likedMost, setLikedMost] = useState('');
-    const [improvements, setImprovements] = useState('');
-    const [comments, setComments] = useState('');
+    const [likedMostRating, setLikedMostRating] = useState(1);
+    const [improvementsRating, setImprovementsRating] = useState(1);
+    const [recommendationRating, setRecommendationRating] = useState(1);
+    const [comments, setComments] = useState("");
     const [selectedEventId, setSelectedEventId] = useState('');
     const navigate = useNavigate();
 
@@ -54,6 +55,29 @@ const UpcomingEvents = () => {
         }
     };
 
+    const handleRSVP = async (eventId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/${eventId}/rsvp`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'FrAngel-auth-token': localStorage.getItem("FrAngel-auth-token")
+                }
+            });
+            if (response.ok) {
+                // Refresh events after successful RSVP
+                const updatedEvents = await response.json();
+                setEvents(updatedEvents);
+                fetchEvents();
+            } else {
+                throw new Error('Failed to RSVP');
+            }
+        } catch (error) {
+            console.error('Error RSVPing to event:', error);
+        }
+    };
+
+
     const handleOpenFeedbackModal = (eventId) => {
         setShowFeedbackModal(true);
         setSelectedEventId(eventId);
@@ -66,8 +90,9 @@ const UpcomingEvents = () => {
     const handleSubmitFeedback = async () => {
         const feedbackData = {
             rating,
-            likedMost,
-            improvements,
+            likedMostRating,
+            improvementsRating,
+            recommendationRating,
             comments
         };
         try {
@@ -84,13 +109,16 @@ const UpcomingEvents = () => {
                 console.log(data.message); // Feedback saved successfully message from backend
                 // Reset form fields
                 setRating(1);
-                setLikedMost('');
-                setImprovements('');
-                setComments('');
-                setShowFeedbackModal(false);
+                setLikedMostRating(1);
+                setImprovementsRating(1);
+                setRecommendationRating(1);
+                setComments("");
+                handleCloseFeedbackModal();
             } else {
                 throw new Error('Failed to submit feedback');
             }
+
+
         } catch (error) {
             console.error('Error submitting feedback:', error);
         }
@@ -182,7 +210,11 @@ const UpcomingEvents = () => {
                         <h2 className="text-xl font-semibold mb-4">Event Feedback Form</h2>
                         <div className="flex flex-col space-y-4">
                             <label className="text-lg">Rate the event:</label>
-                            <select className="px-4 py-2 border rounded-lg" value={rating} onChange={(e) => setRating(e.target.value)}>
+                            <select
+                                className="px-4 py-2 border rounded-lg"
+                                value={rating}
+                                onChange={(e) => setRating(e.target.value)}
+                            >
                                 <option value="1">1</option>
                                 <option value="2">2</option>
                                 <option value="3">3</option>
@@ -190,15 +222,54 @@ const UpcomingEvents = () => {
                                 <option value="5">5</option>
                             </select>
                             <label className="text-lg">What did you like the most about the event?</label>
-                            <textarea className="px-4 py-2 border rounded-lg" rows="3" value={likedMost} onChange={(e) => setLikedMost(e.target.value)}></textarea>
+                            <select
+                                className="px-4 py-2 border rounded-lg"
+                                value={likedMostRating}
+                                onChange={(e) => setLikedMostRating(e.target.value)}
+                            >
+                                <option value="1">Not much</option>
+                                <option value="2">A little</option>
+                                <option value="3">Average</option>
+                                <option value="4">Quite a bit</option>
+                                <option value="5">A lot</option>
+                            </select>
                             <label className="text-lg">What could be improved?</label>
-                            <textarea className="px-4 py-2 border rounded-lg" rows="3" value={improvements} onChange={(e) => setImprovements(e.target.value)}></textarea>
+                            <select
+                                className="px-4 py-2 border rounded-lg"
+                                value={improvementsRating}
+                                onChange={(e) => setImprovementsRating(e.target.value)}
+                            >
+                                <option value="1">Not needed</option>
+                                <option value="2">Minor improvements needed</option>
+                                <option value="3">Some improvements needed</option>
+                                <option value="4">Significant improvements needed</option>
+                                <option value="5">Major improvements needed</option>
+                            </select>
+                            <label className="text-lg">How likely are you to recommend this event to others?</label>
+                            <select
+                                className="px-4 py-2 border rounded-lg"
+                                value={recommendationRating}
+                                onChange={(e) => setRecommendationRating(e.target.value)}
+                            >
+                                <option value="1">Not likely</option>
+                                <option value="2">Somewhat likely</option>
+                                <option value="3">Neutral</option>
+                                <option value="4">Likely</option>
+                                <option value="5">Very likely</option>
+                            </select>
                             <label className="text-lg">Any other comments or suggestions?</label>
-                            <textarea className="px-4 py-2 border rounded-lg" rows="3" value={comments} onChange={(e) => setComments(e.target.value)}></textarea>
+                            <textarea
+                                className="px-4 py-2 border rounded-lg"
+                                rows="3"
+                                value={comments}
+                                onChange={(e) => setComments(e.target.value)}
+                            ></textarea>
                         </div>
                         <div className="flex justify-end mt-4">
                             <Button onClick={handleCloseFeedbackModal}>Close</Button>
-                            <Button onClick={handleSubmitFeedback} variant="contained" color="primary">Submit</Button>
+                            <Button onClick={handleSubmitFeedback} variant="contained" color="primary">
+                                Submit
+                            </Button>
                         </div>
                     </div>
                 </div>

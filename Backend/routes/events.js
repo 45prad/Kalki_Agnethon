@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 
 // Route to add a new event
 router.post('/addEvents', async (req, res) => {
-  const { title, date, location, image, tag, description, link } = req.body;
+  const { title, date, location, image, tag, description, link, department } = req.body;
   try {
     const newEvent = new Event({
       title,
@@ -27,6 +27,7 @@ router.post('/addEvents', async (req, res) => {
       tag,
       description,
       link,
+      department
     });
     const event = await newEvent.save();
     res.status(201).json(event);
@@ -61,27 +62,35 @@ router.put('/:eventId/rsvp', fetchuser, async (req, res) => {
 });
 
 // Route to save feedback
-router.post('/:eventId/feedback', fetchuser,async (req, res) => {
-    try {
-        const eventId = req.params.eventId;
-        const userId = req.user.id;
-        const { rating, likedMost, improvements, comments } = req.body;
+router.post('/:eventId/feedback', fetchuser, async (req, res) => {
+  try {
+      const eventId = req.params.eventId;
+      const userId = req.user.id;
+      const { rating, likedMostRating, improvementsRating, recommendationRating, comments } = req.body;
 
-        const Feedback = new feedback({
-            eventId,
-            userId,
-            rating,
-            likedMost,
-            improvements,
-            comments
-        });
+      // Assuming these ratings are numeric
+      const numericLikedMostRating = parseFloat(likedMostRating);
+      const numericImprovementsRating = parseFloat(improvementsRating);
+      const numericRecommendationRating = parseFloat(recommendationRating);
+      const numericRating = parseFloat(rating);
 
-        await Feedback.save();
-        res.status(201).json({ message: 'Feedback saved successfully' });
-    } catch (err) {
-        console.error(err);
-        res.status(500).json({ message: 'Internal server error' });
-    }
+      const newFeedback = new feedback({
+          eventId,
+          userId,
+          rating: numericRating,
+          likedMostRating: numericLikedMostRating,
+          improvementsRating: numericImprovementsRating,
+          recommendationRating: numericRecommendationRating,
+          comments
+      });
+
+      await newFeedback.save();
+      res.status(201).json({ message: 'Feedback saved successfully' });
+  } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Internal server error' });
+  }
 });
+
 
 module.exports = router;

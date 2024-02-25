@@ -116,6 +116,7 @@ export default function StickyNavbar() {
                         :
                         user.role == "principle"
                             ?
+                            <>
                             <Typography
                                 as="li"
                                 className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
@@ -124,6 +125,15 @@ export default function StickyNavbar() {
                                     Principle Portal
                                 </Link>
                             </Typography>
+                            <Typography
+                                as="li"
+                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                            >
+                                <Link to="/principle/analysis" className="flex items-center">
+                                    Analysis Portal
+                                </Link>
+                            </Typography>
+                            </>
                             :
                             user.role == "facultyMentor"
                                 ?
