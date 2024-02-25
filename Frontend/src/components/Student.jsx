@@ -7,6 +7,7 @@ function Student() {
   const [data, setData] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [user, setUser] = useState({});
   const [formData, setFormData] = useState({
     id: 0,
     committeeName: '',
@@ -22,11 +23,33 @@ function Student() {
 
   useEffect(() => {
     fetchData();
+    getUser();
   }, []);
-  
+
+  const getUser = async () => {
+    // API call
+    const response = await fetch('http://localhost:5000/api/auth/getuser', {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "FrAngel-auth-token": localStorage.getItem('FrAngel-auth-token')
+        },
+    });
+    const json = await response.json();
+    setUser(json)
+    console.log(user);
+
+}
+
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/data');
+      const response = await axios.get('http://localhost:5000/api/data/department',{
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "FrAngel-auth-token": localStorage.getItem('FrAngel-auth-token')
+        },
+    });
       setData(response.data);
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -115,13 +138,13 @@ function Student() {
 
   function extractDateComponents(dateString) {
     const date = new Date(dateString);
-  
+
     const year = date.getFullYear();
-  
-    const month = date.getMonth() + 1; 
-  
+
+    const month = date.getMonth() + 1;
+
     const day = date.getDate();
-  
+
     return `${day}-${month}-${year}`;
   }
   return (
@@ -151,8 +174,8 @@ function Student() {
           </thead>
           <tbody>
             {data.map((item, i) => (
-              <tr key={i+1}>
-                <td className="border px-4 py-2">{i+1}</td>
+              <tr key={i + 1}>
+                <td className="border px-4 py-2">{i + 1}</td>
                 <td className="border px-4 py-2">{item.committeeName}</td>
                 <td className="border px-4 py-2">{item.eventType}</td>
                 <td className="border px-4 py-2">{item.eventName}</td>
@@ -174,8 +197,8 @@ function Student() {
       </div>
       {showModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
-        <div className="bg-white rounded-lg p-6 w-full md:w-1/2 lg:w-1/3 overflow-y-auto max-h-96">
-          <h2 className="text-2xl font-bold mb-4">{editMode ? 'Edit Data' : 'Add Data'}</h2>
+          <div className="bg-white rounded-lg p-6 w-full md:w-1/2 lg:w-1/3 overflow-y-auto max-h-96">
+            <h2 className="text-2xl font-bold mb-4">{editMode ? 'Edit Data' : 'Add Data'}</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-4">
                 <label htmlFor="committeeName" className="block text-sm font-medium text-gray-700">Name of the Committee</label>
@@ -183,83 +206,84 @@ function Student() {
                   type="text"
                   id="committeeName"
                   name="committeeName"
-                  value={formData.committeeName}
-                  onChange={handleChange}
+                  value={user.department}
+                  // onChange={handleChange}
                   className="border border-gray-300 rounded-md p-2 w-full"
+                  disabled
                 />
 
               </div>
               {/* Add other input fields similarly */}
               <div className="mb-4">
-  <label htmlFor="eventType" className="block text-sm font-medium text-gray-700">Event Type</label>
-  <input
-    type="text"
-    id="eventType"
-    name="eventType"
-    value={formData.eventType}
-    onChange={handleChange}
-    className="border border-gray-300 rounded-md p-2 w-full"
-  />
-</div>
+                <label htmlFor="eventType" className="block text-sm font-medium text-gray-700">Event Type</label>
+                <input
+                  type="text"
+                  id="eventType"
+                  name="eventType"
+                  value={formData.eventType}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+              </div>
 
-<div className="mb-4">
-  <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">Event Name</label>
-  <input
-    type="text"
-    id="eventName"
-    name="eventName"
-    value={formData.eventName}
-    onChange={handleChange}
-    className="border border-gray-300 rounded-md p-2 w-full"
-  />
-</div>
+              <div className="mb-4">
+                <label htmlFor="eventName" className="block text-sm font-medium text-gray-700">Event Name</label>
+                <input
+                  type="text"
+                  id="eventName"
+                  name="eventName"
+                  value={formData.eventName}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+              </div>
 
-<div className="mb-4">
-  <label htmlFor="convenorName" className="block text-sm font-medium text-gray-700">Convenor Name</label>
-  <input
-    type="text"
-    id="convenorName"
-    name="convenorName"
-    value={formData.convenorName}
-    onChange={handleChange}
-    className="border border-gray-300 rounded-md p-2 w-full"
-  />
-</div>
+              <div className="mb-4">
+                <label htmlFor="convenorName" className="block text-sm font-medium text-gray-700">Convenor Name</label>
+                <input
+                  type="text"
+                  id="convenorName"
+                  name="convenorName"
+                  value={formData.convenorName}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+              </div>
 
-<div className="mb-4">
-  <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700">Event Date</label>
-  <input
-    type="date"
-    id="eventDate"
-    name="eventDate"
-    value={formData.eventDate}
-    onChange={handleChange}
-    className="border border-gray-300 rounded-md p-2 w-full"
-  />
-</div>
+              <div className="mb-4">
+                <label htmlFor="eventDate" className="block text-sm font-medium text-gray-700">Event Date</label>
+                <input
+                  type="date"
+                  id="eventDate"
+                  name="eventDate"
+                  value={formData.eventDate}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+              </div>
 
-<div className="mb-4">
-  <label htmlFor="duration" className="block text-sm font-medium text-gray-700">Duration (in hours)</label>
-  <input
-    type="number"
-    id="duration"
-    name="duration"
-    value={formData.duration}
-    onChange={handleChange}
-    className="border border-gray-300 rounded-md p-2 w-full"
-  />
-</div>
+              <div className="mb-4">
+                <label htmlFor="duration" className="block text-sm font-medium text-gray-700">Duration (in hours)</label>
+                <input
+                  type="number"
+                  id="duration"
+                  name="duration"
+                  value={formData.duration}
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+              </div>
 
-<div className="mb-4">
-  <label htmlFor="poaPdf" className="block text-sm font-medium text-gray-700">POA PDF</label>
-  <input
-    type="file"
-    id="poaPdf"
-    name="poaPdf"
-    onChange={handleChange}
-    className="border border-gray-300 rounded-md p-2 w-full"
-  />
-</div>
+              <div className="mb-4">
+                <label htmlFor="poaPdf" className="block text-sm font-medium text-gray-700">POA PDF</label>
+                <input
+                  type="file"
+                  id="poaPdf"
+                  name="poaPdf"
+                  onChange={handleChange}
+                  className="border border-gray-300 rounded-md p-2 w-full"
+                />
+              </div>
 
               <div className="mb-4">
                 <label htmlFor="status" className="block text-sm font-medium text-gray-700">Status</label>

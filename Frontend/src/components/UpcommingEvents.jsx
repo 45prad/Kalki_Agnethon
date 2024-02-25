@@ -1,51 +1,106 @@
-import React, { useState } from "react";
-import { Card, CardContent, CardMedia, Typography, Button } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
 const UpcomingEvents = () => {
+    const [events, setEvents] = useState([]);
+    const [userId, setUserId] = useState('');
     const [searchQuery, setSearchQuery] = useState("");
     const [filteredEvents, setFilteredEvents] = useState([]);
+    const [showFeedbackModal, setShowFeedbackModal] = useState(false);
+    const [rating, setRating] = useState(1);
+    const [likedMost, setLikedMost] = useState('');
+    const [improvements, setImprovements] = useState('');
+    const [comments, setComments] = useState('');
+    const [selectedEventId, setSelectedEventId] = useState('');
+    const navigate = useNavigate();
 
-    const events = [
-        {
-            title: "Unlocking Intelligence - AI ML Workshop",
-            date: "FEB 22, 2024",
-            location: "MUMBAI, IN",
-            image: "https://img.freepik.com/premium-vector/artificial-intelligence-machine-learning-poster_35632-60.jpg?w=826",
-            tag: ["Machine Learning", "Python", "TensorFlow"],
-            description:
-                "Explore Kaggle ML Study Jom and Machine Learning with TensorFlow. Join GDSC-TSEC's Al & ML Workshop! Dive into ML 101 and RAG.",
-            link: "#",
-        },
-        {
-            title: "Data Science Summit 2024",
-            date: "MAR 15, 2024",
-            location: "NEW YORK, USA",
-            image: "https://img.freepik.com/free-vector/data-science-concept-illustration_114360-1624.jpg?size=626&ext=jpg",
-            tag: ["Data Science", "Big Data", "Analytics"],
-            description:
-                "Join the biggest data science event of the year! Learn from industry leaders, participate in workshops, and network with professionals.",
-            link: "#",
-        },
-        {
-            title: "Web Development Bootcamp",
-            date: "APR 10, 2024",
-            location: "LONDON, UK",
-            image: "https://img.freepik.com/free-vector/programmer-workplace-with-computer-monitor-development-programming-coding-software-engineering-website-design_335657-3795.jpg?size=626&ext=jpg",
-            tag: ["Web Development", "JavaScript", "React", "Node.js"],
-            description:
-                "Become a proficient web developer in just 2 weeks! Our intensive bootcamp covers HTML, CSS, JavaScript, and modern frameworks.",
-            link: "#",
-        },
-        // Add more events as needed
-    ];
+    useEffect(() => {
+        fetchEvents();
+        getUser();
+    }, []);
 
-    // Function to handle search input change
+    const getUser = async () => {
+        try {
+            const response = await fetch('http://localhost:5000/api/auth/getuser', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    "FrAngel-auth-token": localStorage.getItem('FrAngel-auth-token')
+                },
+            });
+            if (response.ok) {
+                const json = await response.json();
+                setUserId(json._id);
+            } else {
+                throw new Error('Failed to get user data');
+            }
+        } catch (error) {
+            console.error('Error fetching user:', error);
+        }
+    }
+
+    const fetchEvents = async () => {
+        try {
+            const response = await fetch("http://localhost:5000/api/events");
+            if (response.ok) {
+                const data = await response.json();
+                setEvents(data);
+            } else {
+                throw new Error("Failed to fetch events");
+            }
+        } catch (error) {
+            console.error("Error fetching events:", error);
+        }
+    };
+
+    const handleOpenFeedbackModal = (eventId) => {
+        setShowFeedbackModal(true);
+        setSelectedEventId(eventId);
+    };
+
+    const handleCloseFeedbackModal = () => {
+        setShowFeedbackModal(false);
+    };
+
+    const handleSubmitFeedback = async () => {
+        const feedbackData = {
+            rating,
+            likedMost,
+            improvements,
+            comments
+        };
+        try {
+            const response = await fetch(`http://localhost:5000/api/events/${selectedEventId}/feedback`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'FrAngel-auth-token': localStorage.getItem('FrAngel-auth-token')
+                },
+                body: JSON.stringify(feedbackData)
+            });
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.message); // Feedback saved successfully message from backend
+                // Reset form fields
+                setRating(1);
+                setLikedMost('');
+                setImprovements('');
+                setComments('');
+                setShowFeedbackModal(false);
+            } else {
+                throw new Error('Failed to submit feedback');
+            }
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+        }
+    };
+
     const handleSearchInputChange = (e) => {
         setSearchQuery(e.target.value);
         filterEvents(e.target.value);
     };
 
-    // Function to filter events based on search query
     const filterEvents = (query) => {
         const filtered = events.filter((event) =>
             event.title.toLowerCase().includes(query.toLowerCase())
@@ -53,12 +108,16 @@ const UpcomingEvents = () => {
         setFilteredEvents(filtered);
     };
 
-    // Use the filtered events if search query is not empty, otherwise use all events
     const eventsToDisplay = searchQuery ? filteredEvents : events;
+
+    const isEventExpired = (eventDate) => {
+        const currentDate = new Date();
+        const eventDateObj = new Date(eventDate);
+        return eventDateObj < currentDate;
+    };
 
     return (
         <div className="mt-8 mx-8">
-            {/* Search input */}
             <input
                 type="text"
                 placeholder="Search events..."
@@ -66,7 +125,6 @@ const UpcomingEvents = () => {
                 onChange={handleSearchInputChange}
                 className="border border-gray-300 rounded-md p-2 mb-4 w-full"
             />
-            {/* Display events */}
             {eventsToDisplay.map((event, index) => (
                 <div key={index} className="flex md:flex-row flex-col border-2 rounded-2xl items-center p-4 my-8">
                     <img
@@ -85,15 +143,66 @@ const UpcomingEvents = () => {
                             {event.tag.map((tag, index) => (
                                 <div key={index} className="px-4 py-1 me-2 bg-gray-200 rounded-md">{tag}</div>
                             ))}
-
                         </div>
                         <Typography variant="body1">{event.description}</Typography>
-                        <button href={event.link} className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg">
-                            RSVP
-                        </button>
+                        {isEventExpired(event.date) && !event.registeredUsers.includes(userId) && (
+                            <button
+                                className="mt-2 bg-red-500 text-white px-4 py-2 rounded-lg"
+                                type="button"
+                                onClick={() => navigate(`/feedback/${event._id}`)}
+                            >
+                                Event expired
+                            </button>
+                        )}
+                        {!isEventExpired(event.date) && !event.registeredUsers.includes(userId) && (
+                            <button
+                                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                type="button"
+                                onClick={() => handleRSVP(event._id)}
+                                style={{ backgroundColor: event.registeredUsers.includes(userId) ? 'green' : 'blue', color: 'white' }}
+                            >
+                                {event.registeredUsers.includes(userId) ? 'Registered' : 'RSVP'}
+                            </button>
+                        )}
+                        {!isEventExpired(event.date) && event.registeredUsers.includes(userId) && (
+                            <button
+                                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
+                                type="button"
+                                onClick={() => handleOpenFeedbackModal(event._id)}
+                            >
+                                Feedback Form
+                            </button>
+                        )}
                     </div>
                 </div>
             ))}
+            {showFeedbackModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
+                    <div className="bg-white rounded-lg p-6 w-full md:w-2/3 lg:w-1/3 overflow-y-auto h-full md:max-h-96">
+                        <h2 className="text-xl font-semibold mb-4">Event Feedback Form</h2>
+                        <div className="flex flex-col space-y-4">
+                            <label className="text-lg">Rate the event:</label>
+                            <select className="px-4 py-2 border rounded-lg" value={rating} onChange={(e) => setRating(e.target.value)}>
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                            <label className="text-lg">What did you like the most about the event?</label>
+                            <textarea className="px-4 py-2 border rounded-lg" rows="3" value={likedMost} onChange={(e) => setLikedMost(e.target.value)}></textarea>
+                            <label className="text-lg">What could be improved?</label>
+                            <textarea className="px-4 py-2 border rounded-lg" rows="3" value={improvements} onChange={(e) => setImprovements(e.target.value)}></textarea>
+                            <label className="text-lg">Any other comments or suggestions?</label>
+                            <textarea className="px-4 py-2 border rounded-lg" rows="3" value={comments} onChange={(e) => setComments(e.target.value)}></textarea>
+                        </div>
+                        <div className="flex justify-end mt-4">
+                            <Button onClick={handleCloseFeedbackModal}>Close</Button>
+                            <Button onClick={handleSubmitFeedback} variant="contained" color="primary">Submit</Button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };

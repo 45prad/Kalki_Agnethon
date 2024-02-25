@@ -18,6 +18,7 @@ app.use(express.json())
 app.use('/api/auth',require('./routes/auth.js'))
 app.use('/api/room',require('./routes/room.js'))
 app.use('/api/data', require('./routes/data.js'));
+app.use('/api/events', require('./routes/events.js'));
 
 app.listen(port,()=>{
     console.log(`Listening on port: ${port}`)
