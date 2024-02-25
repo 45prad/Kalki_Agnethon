@@ -15,6 +15,7 @@ import HodPage from "./components/Hodpage";
 import PrincipalPage from "./components/PrinciplePage";
 import Commitee from "./components/Student";
 import UpcomingEvents from "./components/UpcommingEvents";
+import SystemDashboard from "./components/SystemPage";
 
 
 
@@ -31,6 +32,7 @@ export function App() {
         <Route exact path='/student' element={<>hello ji</>}/>
         <Route exact path='/upcomingevents' element={<UpcomingEvents/>}/>
         <Route exact path='/roombooking' element={<Rooms/>}/>
+        <Route exact path='/System' element={<SystemDashboard/>}/>
       </Routes>
     </Router>
     </>

@@ -147,6 +147,7 @@ function Student() {
 
     return `${day}-${month}-${year}`;
   }
+  
   return (
     <div className="container mx-auto mt-8">
       <h1 className="text-3xl font-bold mb-4">Add Events</h1>
@@ -315,3 +316,5 @@ function Student() {
 }
 
 export default Student;
+
+
