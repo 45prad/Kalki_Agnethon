@@ -1,11 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../app.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBuilding } from '@fortawesome/free-solid-svg-icons';
+import { useNavigate } from 'react-router-dom';
 
 function SystemDashboard() {
+  const navigate = useNavigate();
   const [data, setData] = useState([]);
+  const [rooms, setRooms] = useState([]);
+
+  useEffect(() => {
+    // Fetch room data from backend API
+    fetch('http://localhost:5000/api/room')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Failed to fetch rooms');
+        }
+        return response.json();
+      })
+      .then(data => {
+        setRooms(data);
+      })
+      .catch(error => {
+        console.error('Error fetching rooms:', error);
+      });
+  }, []);
 
   useEffect(() => {
     fetchData();
@@ -28,6 +46,8 @@ function SystemDashboard() {
   const handleRoomAllocation = async (id) => {
     // Logic for room allocation goes here
     console.log(`Allocating room for item with ID: ${id}`);
+
+    navigate(`/roombooking/${id}`);
   };
 
   return (
@@ -68,12 +88,12 @@ function SystemDashboard() {
                   <FontAwesomeIcon icon={faBuilding} className="mr-2" />
                   Assign Venue
                 </button> */}
-                <button
+
+                {rooms.some(room => room.eventId === item._id) ? <h1>{item.committeeName +"\n"+ item.eventDate.split('T')[0]}</h1> : <button
                   className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                   onClick={() => handleRoomAllocation(item._id)}
-                >
-                  Allocate Room
-                </button>
+                >Allocate Room</button>}
+
               </td>
             </tr>
           ))}

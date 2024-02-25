@@ -3,6 +3,7 @@ const router = express.Router();
 const Event = require('../models/events');
 const fetchuser = require('../middleware/fetchuser');
 const feedback = require('../models/feedback');
+const user = require('../models/user');
 
 // Route to get all events
 router.get('/', async (req, res) => {
@@ -68,19 +69,13 @@ router.post('/:eventId/feedback', fetchuser, async (req, res) => {
       const userId = req.user.id;
       const { rating, likedMostRating, improvementsRating, recommendationRating, comments } = req.body;
 
-      // Assuming these ratings are numeric
-      const numericLikedMostRating = parseFloat(likedMostRating);
-      const numericImprovementsRating = parseFloat(improvementsRating);
-      const numericRecommendationRating = parseFloat(recommendationRating);
-      const numericRating = parseFloat(rating);
-
       const newFeedback = new feedback({
           eventId,
           userId,
-          rating: numericRating,
-          likedMostRating: numericLikedMostRating,
-          improvementsRating: numericImprovementsRating,
-          recommendationRating: numericRecommendationRating,
+          rating,
+          likedMost: likedMostRating,
+          improvements: improvementsRating,
+          recommendations: recommendationRating,
           comments
       });
 
@@ -89,6 +84,51 @@ router.post('/:eventId/feedback', fetchuser, async (req, res) => {
   } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Internal server error' });
+  }
+});
+
+// Route to get events and registered users details based on user department for commitee
+router.get('/registerations', fetchuser, async (req, res) => {
+  try {
+    // Extract department from JWT token
+    const userId = req.user.id;
+    const userData = await user.findById(userId);
+    const userDepartment = userData.department;
+
+    // Find events with the same department as the user's department
+    const events = await Event.find({ department: userDepartment });
+
+    // Array to store event details along with registered users' details
+    const eventData = [];
+
+    // Iterate over events
+    for (const event of events) {
+      const eventDetails = {
+        title: event.title,
+        registeredUsers: []
+      };
+
+      // Iterate over registered users
+      for (const userId of event.registeredUsers) {
+        const User = await user.findById(userId);
+        if (User) {
+          // Push user details into registeredUsers array
+          eventDetails.registeredUsers.push({
+            email: User.email,
+            department: User.department
+          });
+        }
+      }
+
+      // Push event details into eventData array
+      eventData.push(eventDetails);
+    }
+
+    // Send the combined data as the response
+    res.json(eventData);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
   }
 });
 

@@ -34,17 +34,17 @@ export default function StickyNavbar() {
         }
     }, []);
 
-    useEffect(()=>{
+    useEffect(() => {
         if (user.role == "hod") {
             navigate("/hod")
         }
-        else if(user.role == "principle"){
+        else if (user.role == "principle") {
             navigate("/principle")
         }
-        else if(user.role == "commitee"){
+        else if (user.role == "commitee") {
             navigate("/commitee")
         }
-        else if(user.role == "student"){
+        else if (user.role == "student") {
             navigate("/student")
         }
     }, [user])
@@ -75,18 +75,37 @@ export default function StickyNavbar() {
             {
                 user.role == "hod"
                     ?
-                    <Typography
-                        as="li"
-                        className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
-                    >
-                        <Link to="/hod" className="flex items-center">
-                            HOD Portal
-                        </Link>
-                    </Typography>
+                    <>
+                        <Typography
+                            as="li"
+                            className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                        >
+                            <Link to="/hod" className="flex items-center">
+                                HOD Portal
+                            </Link>
+                        </Typography>
+                        <Typography
+                            as="li"
+                            className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                        >
+                            <Link to="/principle/analysis" className="flex items-center">
+                                Analysis
+                            </Link>
+                        </Typography>
+                    </>
+
                     :
                     user.role == "commitee"
                         ?
                         <>
+                            <Typography
+                                as="li"
+                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                            >
+                                <Link to="/" className="flex items-center">
+                                    All Events
+                                </Link>
+                            </Typography>
                             <Typography
                                 as="li"
                                 className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
@@ -103,11 +122,12 @@ export default function StickyNavbar() {
                                     Registerations
                                 </Link>
                             </Typography>
+
                             <Typography
                                 as="li"
                                 className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
                             >
-                                <Link to="/" className="flex items-center">
+                                <Link to="/committee/analysis" className="flex items-center">
                                     Feedback Analysis
                                 </Link>
                             </Typography>
@@ -117,53 +137,63 @@ export default function StickyNavbar() {
                         user.role == "principle"
                             ?
                             <>
-                            <Typography
-                                as="li"
-                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
-                            >
-                                <Link to="/principle" className="flex items-center">
-                                    Principle Portal
-                                </Link>
-                            </Typography>
-                            <Typography
-                                as="li"
-                                className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
-                            >
-                                <Link to="/principle/analysis" className="flex items-center">
-                                    Analysis Portal
-                                </Link>
-                            </Typography>
-                            </>
-                            :
-                            user.role == "facultyMentor"
-                                ?
                                 <Typography
                                     as="li"
                                     className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
                                 >
-                                    <Link to="/facultyMentor" className="flex items-center">
-                                        Faculty Mentor Portal
+                                    <Link to="/principle" className="flex items-center">
+                                        Principle Portal
                                     </Link>
                                 </Typography>
-                                :
+                                <Typography
+                                    as="li"
+                                    className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                                >
+                                    <Link to="/principle/analysis" className="flex items-center">
+                                        Analysis Portal
+                                    </Link>
+                                </Typography>
+                            </>
+                            :
+                            user.role == "system"
+                                ?
                                 <>
                                 <Typography
                                     as="li"
                                     className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
                                 >
-                                    <Link to="/student" className="flex items-center">
-                                        Student Portal
+                                    <Link to="/System" className="flex items-center">
+                                        System Portal
                                     </Link>
                                 </Typography>
                                 <Typography
                                     as="li"
                                     className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
                                 >
-                                    <Link to="/upcomingevents" className="flex items-center">
-                                        Upcoming Events
+                                    <Link to="/roombooking" className="flex items-center">
+                                        Availabale Rooms
                                     </Link>
                                 </Typography>
-                                
+                                </>
+                                :
+                                <>
+                                    <Typography
+                                        as="li"
+                                        className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                                    >
+                                        <Link to="/student" className="flex items-center">
+                                            Student Portal
+                                        </Link>
+                                    </Typography>
+                                    <Typography
+                                        as="li"
+                                        className="p-1 font-normal text-black hover:bg-gray-300 px-4 rounded"
+                                    >
+                                        <Link to="/upcomingevents" className="flex items-center">
+                                            Upcoming Events
+                                        </Link>
+                                    </Typography>
+
                                 </>
 
             }

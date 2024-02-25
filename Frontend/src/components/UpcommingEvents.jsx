@@ -170,19 +170,19 @@ const UpcomingEvents = () => {
                         <div className="flex flex-row flex-wrap py-2">
                             {event.tag.map((tag, index) => (
                                 <div key={index} className="px-4 py-1 me-2 bg-gray-200 rounded-md">{tag}</div>
-                            ))}
+                            ))
+                            }
                         </div>
                         <Typography variant="body1">{event.description}</Typography>
-                        {isEventExpired(event.date) && !event.registeredUsers.includes(userId) && (
+                        {(isEventExpired(event.date) && event.registeredUsers.includes(userId)) ? (
                             <button
-                                className="mt-2 bg-red-500 text-white px-4 py-2 rounded-lg"
+                                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
                                 type="button"
-                                onClick={() => navigate(`/feedback/${event._id}`)}
+                                onClick={() => handleOpenFeedbackModal(event._id)}
                             >
-                                Event expired
+                                Feedback Form
                             </button>
-                        )}
-                        {!isEventExpired(event.date) && !event.registeredUsers.includes(userId) && (
+                        ) : (
                             <button
                                 className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
                                 type="button"
@@ -192,15 +192,7 @@ const UpcomingEvents = () => {
                                 {event.registeredUsers.includes(userId) ? 'Registered' : 'RSVP'}
                             </button>
                         )}
-                        {!isEventExpired(event.date) && event.registeredUsers.includes(userId) && (
-                            <button
-                                className="mt-2 bg-blue-500 text-white px-4 py-2 rounded-lg"
-                                type="button"
-                                onClick={() => handleOpenFeedbackModal(event._id)}
-                            >
-                                Feedback Form
-                            </button>
-                        )}
+
                     </div>
                 </div>
             ))}
@@ -227,11 +219,11 @@ const UpcomingEvents = () => {
                                 value={likedMostRating}
                                 onChange={(e) => setLikedMostRating(e.target.value)}
                             >
-                                <option value="1">Not much</option>
-                                <option value="2">A little</option>
-                                <option value="3">Average</option>
-                                <option value="4">Quite a bit</option>
-                                <option value="5">A lot</option>
+                                <option value="Not much">Not much</option>
+                                <option value="A little">A little</option>
+                                <option value="Average">Average</option>
+                                <option value="Quite a bit">Quite a bit</option>
+                                <option value="A lot">A lot</option>
                             </select>
                             <label className="text-lg">What could be improved?</label>
                             <select
@@ -239,11 +231,11 @@ const UpcomingEvents = () => {
                                 value={improvementsRating}
                                 onChange={(e) => setImprovementsRating(e.target.value)}
                             >
-                                <option value="1">Not needed</option>
-                                <option value="2">Minor improvements needed</option>
-                                <option value="3">Some improvements needed</option>
-                                <option value="4">Significant improvements needed</option>
-                                <option value="5">Major improvements needed</option>
+                                <option value="Not needed">Not needed</option>
+                                <option value="Minor improvements needed">Minor improvements needed</option>
+                                <option value="Some improvements needed">Some improvements needed</option>
+                                <option value="Significant improvements needed">Significant improvements needed</option>
+                                <option value="Major improvements needed">Major improvements needed</option>
                             </select>
                             <label className="text-lg">How likely are you to recommend this event to others?</label>
                             <select
@@ -251,11 +243,11 @@ const UpcomingEvents = () => {
                                 value={recommendationRating}
                                 onChange={(e) => setRecommendationRating(e.target.value)}
                             >
-                                <option value="1">Not likely</option>
-                                <option value="2">Somewhat likely</option>
-                                <option value="3">Neutral</option>
-                                <option value="4">Likely</option>
-                                <option value="5">Very likely</option>
+                                <option value="Not likely">Not likely</option>
+                                <option value="Somewhat likely">Somewhat likely</option>
+                                <option value="Neutral">Neutral</option>
+                                <option value="Likely">Likely</option>
+                                <option value="Very likely">Very likely</option>
                             </select>
                             <label className="text-lg">Any other comments or suggestions?</label>
                             <textarea

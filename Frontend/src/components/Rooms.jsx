@@ -1,6 +1,9 @@
 import React, { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 
 export default function RoomBooking() {
+  
+  const { eventId } = useParams();
   const [rooms, setRooms] = useState([]);
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [committeeDetails, setCommitteeDetails] = useState('');
@@ -46,11 +49,11 @@ export default function RoomBooking() {
     }
     // Make API call to book the room
     fetch(`http://localhost:5000/api/room/${selectedRoom._id}/book`, {
-      method: 'PUT',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ committeeDetails, bookingTime })
+      body: JSON.stringify({ eventId: eventId, committeeDetails: committeeDetails, bookingTime: bookingTime })
     })
       .then(response => {
         if (!response.ok) {
@@ -61,6 +64,7 @@ export default function RoomBooking() {
       .then(data => {
         console.log('Room booked successfully:', data);
         // Update room status locally
+        
         setRooms(rooms.map(room => {
           if (room._id === selectedRoom._id) {
             return { ...room, booked: true, allocatedTo: committeeDetails, bookedAt: bookingTime };

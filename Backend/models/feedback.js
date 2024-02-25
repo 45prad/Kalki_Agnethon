@@ -11,8 +11,9 @@ const feedbackSchema = new Schema({
         ref: 'User'
     },
     rating: Number,
-    likedMost: Number, 
-    improvements: Number, 
+    likedMost: String, 
+    improvements: String, 
+    recommendations: String, 
     comments: String 
 });
 

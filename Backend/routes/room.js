@@ -27,7 +27,7 @@ router.get('/', async (req, res) => {
   });
   
   // Book a room
-router.put('/:id/book', async (req, res) => {
+router.post('/:id/book', async (req, res) => {
     try {
       const seat = await Room.findById(req.params.id);
       if (!seat) return res.status(404).json({ message: 'Seat not found' });
@@ -39,6 +39,7 @@ router.put('/:id/book', async (req, res) => {
       seat.allocatedTo = req.body.committeeDetails;
       seat.bookedAt = req.body.bookingTime;
       seat.booked = true;
+      seat.eventId = req.body.eventId;
   
       await seat.save();
       res.json(seat);

@@ -15,6 +15,8 @@ app.use(cors());
 
 app.use(express.json())
 
+app.use("/uploads", express.static("uploads"))
+
 app.use('/api/auth',require('./routes/auth.js'))
 app.use('/api/room',require('./routes/room.js'))
 app.use('/api/data', require('./routes/data.js'));
